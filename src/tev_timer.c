@@ -12,7 +12,7 @@ tev_timer_init(tev_loop_t *loop, tev_timer_t *handle)
 
 int
 tev_timer_start(tev_timer_t *handle,
-                tev_handle_cb cb,
+                tev_timer_cb cb,
                 uint64_t time,
                 uint64_t repeat)
 {

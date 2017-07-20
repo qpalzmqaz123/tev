@@ -4,11 +4,13 @@
 #include "queue.h"
 #include <stdint.h>
 
+
 #define TEV_ASSERT_NOT_NULL(x) do { \
     if (NULL == (x)) { \
         abort(); \
     } \
 } while (0)
+
 
 #define TEV_HANDLE_FIELDS \
     void *data; \
@@ -18,7 +20,18 @@
     uint64_t time; \
     uint64_t repeat; \
     int is_cancel; \
-    void (*cb)(tev_handle_t *);
+    void (*cb)(tev_timer_t *);
+
+
+typedef struct tev_handle_s tev_handle_t;
+typedef struct tev_timer_s tev_timer_t;
+typedef struct tev_io_s tev_io_t;
+
+
+typedef void (*tev_handle_cb)(tev_handle_t *);
+typedef void (*tev_timer_cb)(tev_timer_t *);
+typedef void (*tev_io_cb)(tev_io_t *);
+
 
 typedef struct {
     void *(*malloc)(size_t);
@@ -34,24 +47,24 @@ typedef struct {
     uint64_t time;
 } tev_loop_t;
 
-typedef struct {
-    TEV_HANDLE_FIELDS
-} tev_handle_t;
-
-typedef struct {
+struct tev_timer_s {
     TEV_HANDLE_FIELDS
     TEV_HANDLE_TIMER_FIELDS
-} tev_timer_t;
+};
 
-typedef struct {
+struct tev_handle_s {
     TEV_HANDLE_FIELDS
-} tev_io_t;
+};
 
-typedef void (*tev_handle_cb)(tev_handle_t *);
+struct tev_io_s {
+    TEV_HANDLE_FIELDS
+};
+
 
 /* private APIS */
 int
 tev__handle_init(tev_loop_t *loop, tev_handle_t *handle);
+
 
 /* APIS */
 tev_loop_t *
