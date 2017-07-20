@@ -3,3 +3,8 @@ build
 a.out
 
 *.swp
+
+GPATH
+GRTAGS
+GTAGS
+tags
