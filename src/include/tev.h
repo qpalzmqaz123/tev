@@ -12,14 +12,22 @@
 } while (0)
 
 
+typedef enum {
+    TEV_HANDLE_TYPE_TIMER = 0
+} tev_handle_type_t;
+
+
 #define TEV_HANDLE_FIELDS \
     void *data; \
-    tev_loop_t *loop;
+    tev_loop_t *loop; \
+    QUEUE node[2]; \
+    tev_handle_type_t type; \
+    void (*process)(tev_handle_t *); \
+    int is_cancel;
 
 #define TEV_HANDLE_TIMER_FIELDS \
     uint64_t time; \
     uint64_t repeat; \
-    int is_cancel; \
     void (*cb)(tev_timer_t *);
 
 
@@ -75,4 +83,17 @@ tev_loop_get_default();
 
 int
 tev_run(tev_loop_t *loop);
+
+int
+tev_timer_init(tev_loop_t *loop, tev_timer_t *handle);
+
+int
+tev_timer_start(tev_timer_t *handle,
+                tev_timer_cb cb,
+                uint64_t time,
+                uint64_t repeat);
+
+int
+tev_timer_stop(tev_timer_t *handle);
+
 #endif
