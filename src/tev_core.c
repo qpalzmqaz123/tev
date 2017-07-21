@@ -34,8 +34,8 @@ int
 tev_run(tev_loop_t *loop)
 {
     while (0 == loop->is_cancel) {
-        if (QUEUE_EMPTY(loop->handle_queue) ||
-            QUEUE_EMPTY(loop->timer_queue) ||
+        if (QUEUE_EMPTY(loop->handle_queue) &&
+            QUEUE_EMPTY(loop->timer_queue) &&
             QUEUE_EMPTY(loop->idle_queue)) {
             break;
         }
