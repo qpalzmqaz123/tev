@@ -110,4 +110,13 @@ tev_timer_start(tev_timer_t *handle,
 int
 tev_timer_stop(tev_timer_t *handle);
 
+int
+tev_idle_init(tev_loop_t *loop, tev_idle_t *handle);
+
+int
+tev_idle_start(tev_idle_t *handle, tev_idle_cb cb);
+
+int
+tev_idle_stop(tev_idle_t *handle);
+
 #endif

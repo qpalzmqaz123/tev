@@ -30,8 +30,6 @@ tev_timer_start(tev_timer_t *handle,
 int
 tev_timer_stop(tev_timer_t *handle)
 {
-    handle->is_cancel = 1;
-
     QUEUE_REMOVE(handle->timer_queue);
 
     return 0;

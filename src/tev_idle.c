@@ -10,3 +10,21 @@ tev_idle_init(tev_loop_t *loop, tev_idle_t *handle)
 
     return 0;
 }
+
+int
+tev_idle_start(tev_idle_t *handle, tev_idle_cb cb)
+{
+    handle->cb = cb;
+
+    QUEUE_INSERT_TAIL(handle->loop->idle_queue, handle->idle_queue);
+
+    return 0;
+}
+
+int
+tev_idle_stop(tev_idle_t *handle)
+{
+    QUEUE_REMOVE(handle->idle_queue);
+
+    return 0;
+}
