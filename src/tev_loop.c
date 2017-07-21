@@ -3,6 +3,8 @@
 #include <string.h>
 #include "tev.h"
 
+static tev_loop_t *default_loop = NULL;
+
 tev_loop_t *
 tev_loop_create(tev_heap_fn_t *p)
 {
@@ -26,13 +28,17 @@ tev_loop_create(tev_heap_fn_t *p)
 tev_loop_t *
 tev_default_loop(void)
 {
-    tev_heap_fn_t fn = {
-        .malloc = malloc, 
-        .calloc = calloc,
-        .realloc = realloc,
-        .free = free
-    };
+    if (NULL == default_loop) {
+        tev_heap_fn_t fn = {
+            .malloc = malloc,
+            .calloc = calloc,
+            .realloc = realloc,
+            .free = free
+        };
 
-    return tev_loop_create(&fn);
+        default_loop = tev_loop_create(&fn);
+    }
+
+    return default_loop;
 }
 
