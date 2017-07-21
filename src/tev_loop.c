@@ -22,7 +22,7 @@ tev_loop_create(tev_heap_fn_t *p)
 }
 
 tev_loop_t *
-tev_loop_get_default()
+tev_default_loop()
 {
     tev_heap_fn_t fn = {
         .malloc = malloc, 

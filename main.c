@@ -16,7 +16,7 @@ callback(tev_timer_t *handle)
 int
 main(void)
 {
-    tev_loop_t *loop = tev_loop_get_default();
+    tev_loop_t *loop = tev_default_loop();
 
     tev_timer_t timer;
 

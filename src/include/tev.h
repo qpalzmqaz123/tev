@@ -79,7 +79,7 @@ tev_loop_t *
 tev_loop_create(tev_heap_fn_t *p);
 
 tev_loop_t *
-tev_loop_get_default();
+tev_default_loop();
 
 int
 tev_run(tev_loop_t *loop);
