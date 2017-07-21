@@ -22,13 +22,13 @@ typedef enum {
     tev_loop_t *loop; \
     QUEUE node[2]; \
     tev_handle_type_t type; \
-    void (*process)(tev_handle_t *); \
+    tev_handle_cb process; \
     int is_cancel;
 
 #define TEV_HANDLE_TIMER_FIELDS \
     uint64_t time; \
     uint64_t repeat; \
-    void (*cb)(tev_timer_t *);
+    tev_timer_cb cb;
 
 
 typedef struct tev_handle_s tev_handle_t;
@@ -79,7 +79,7 @@ tev_loop_t *
 tev_loop_create(tev_heap_fn_t *p);
 
 tev_loop_t *
-tev_default_loop();
+tev_default_loop(void);
 
 int
 tev_run(tev_loop_t *loop);
