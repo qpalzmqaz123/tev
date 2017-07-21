@@ -20,7 +20,7 @@ tev__process_handle(tev_loop_t *loop)
     tev_handle_t *handle;
 
     QUEUE_FOREACH(q, loop->handle_queue) {
-        handle = QUEUE_DATA(q, tev_handle_t, node);
+        handle = QUEUE_DATA(q, tev_handle_t, handle_queue);
 
         if (handle->process != NULL) {
             handle->process(handle);

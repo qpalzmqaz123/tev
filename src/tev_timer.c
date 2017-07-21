@@ -34,7 +34,7 @@ tev_timer_start(tev_timer_t *handle,
     handle->repeat = repeat;
     handle->cb = cb;
 
-    QUEUE_INSERT_TAIL(handle->loop->handle_queue, handle->node);
+    QUEUE_INSERT_TAIL(handle->loop->handle_queue, handle->handle_queue);
 
     return 0;
 }
@@ -44,7 +44,7 @@ tev_timer_stop(tev_timer_t *handle)
 {
     handle->is_cancel = 1;
 
-    QUEUE_REMOVE(handle->node);
+    QUEUE_REMOVE(handle->handle_queue);
 
     return 0;
 }

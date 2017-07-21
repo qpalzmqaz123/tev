@@ -20,7 +20,7 @@ typedef enum {
 #define TEV_HANDLE_FIELDS \
     void *data; \
     tev_loop_t *loop; \
-    QUEUE node[2]; \
+    QUEUE handle_queue[2]; \
     tev_handle_type_t type; \
     tev_handle_cb process; \
     int is_cancel;
