@@ -16,6 +16,8 @@ tev_loop_create(tev_heap_fn_t *p)
     /* init */
     memcpy(&loop->heap_fn, p, sizeof(tev_heap_fn_t));
     QUEUE_INIT(loop->handle_queue);
+    QUEUE_INIT(loop->timer_queue);
+    QUEUE_INIT(loop->idle_queue);
     loop->is_cancel = 0;
 
     return loop;

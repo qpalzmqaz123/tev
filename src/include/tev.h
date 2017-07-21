@@ -27,11 +27,13 @@ typedef enum {
     int is_cancel;
 
 #define TEV_HANDLE_TIMER_FIELDS \
+    QUEUE timer_queue[2]; \
     uint64_t time; \
     uint64_t repeat; \
     tev_timer_cb cb;
 
 #define TEV_HANDLE_IDLE_FILEDS \
+    QUEUE idle_queue[2]; \
     tev_idle_cb cb;
 
 
