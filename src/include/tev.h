@@ -13,7 +13,8 @@
 
 
 typedef enum {
-    TEV_HANDLE_TYPE_TIMER = 0
+    TEV_HANDLE_TYPE_TIMER = 0,
+    TEV_HANDLE_TYPE_IDLE = 0
 } tev_handle_type_t;
 
 
@@ -21,6 +22,7 @@ typedef enum {
     void *data; \
     tev_loop_t *loop; \
     QUEUE handle_queue[2]; \
+    QUEUE idle_queue[2]; \
     tev_handle_type_t handle_type; \
     tev_handle_cb process; \
     int is_cancel;
@@ -30,15 +32,20 @@ typedef enum {
     uint64_t repeat; \
     tev_timer_cb cb;
 
+#define TEV_HANDLE_IDLE_FILEDS \
+    tev_idle_cb cb;
+
 
 typedef struct tev_handle_s tev_handle_t;
 typedef struct tev_timer_s tev_timer_t;
 typedef struct tev_io_s tev_io_t;
+typedef struct tev_idle_s tev_idle_t;
 
 
 typedef void (*tev_handle_cb)(tev_handle_t *);
 typedef void (*tev_timer_cb)(tev_timer_t *);
 typedef void (*tev_io_cb)(tev_io_t *);
+typedef void (*tev_idle_cb)(tev_idle_t *);
 
 
 typedef struct {
@@ -66,6 +73,11 @@ struct tev_handle_s {
 
 struct tev_io_s {
     TEV_HANDLE_FIELDS
+};
+
+struct tev_idle_s {
+    TEV_HANDLE_FIELDS
+    TEV_HANDLE_IDLE_FILEDS
 };
 
 
