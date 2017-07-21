@@ -18,7 +18,7 @@ tev_timer_init(tev_loop_t *loop, tev_timer_t *handle)
 {
     tev__handle_init(loop, (tev_handle_t *)handle);
     handle->cb = NULL;
-    handle->type = TEV_HANDLE_TYPE_TIMER;
+    handle->handle_type = TEV_HANDLE_TYPE_TIMER;
     handle->process = tev__timer_process;
     
     return 0;
