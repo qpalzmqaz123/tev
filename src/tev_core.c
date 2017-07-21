@@ -13,21 +13,23 @@ tev__wait_io(tev_loop_t *loop, uint64_t timeout)
     return 0;
 }
 
-static int
-tev__process_handle(tev_loop_t *loop)
+static void
+tev__process_timer(tev_loop_t *loop)
 {
     QUEUE *q;
-    tev_handle_t *handle;
+    tev_timer_t *handle;
 
-    QUEUE_FOREACH(q, loop->handle_queue) {
-        handle = QUEUE_DATA(q, tev_handle_t, handle_queue);
+    QUEUE_FOREACH(q, loop->timer_queue) {
+        handle = QUEUE_DATA(q, tev_timer_t, timer_queue);
 
-        if (handle->process != NULL) {
-            handle->process(handle);
+        if (handle->time - handle->loop->time > 0) return;
+
+        if (NULL != handle->cb) {
+            handle->cb(handle);
         }
-    }
 
-    return 0;
+        handle->time = handle->loop->time + handle->repeat;
+    }
 }
 
 int
@@ -41,12 +43,11 @@ tev_run(tev_loop_t *loop)
         }
 
         tev__update_time(loop);
+        tev__process_timer(loop);
 
         tev__wait_io(loop, 0);
 
         tev__update_time(loop);
-
-        tev__process_handle(loop);
     }
 
     return 0;
@@ -57,7 +58,6 @@ tev__handle_init(tev_loop_t *loop, tev_handle_t *handle)
 {
     handle->data = NULL;
     handle->loop = loop;
-    handle->process = NULL;
     handle->is_cancel = 0;
 
     return 0;

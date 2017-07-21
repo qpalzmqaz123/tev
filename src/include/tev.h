@@ -23,7 +23,6 @@ typedef enum {
     tev_loop_t *loop; \
     QUEUE handle_queue[2]; \
     tev_handle_type_t handle_type; \
-    tev_handle_cb process; \
     int is_cancel;
 
 #define TEV_HANDLE_TIMER_FIELDS \
