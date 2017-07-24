@@ -14,7 +14,8 @@
 
 typedef enum {
     TEV_HANDLE_TYPE_TIMER = 0,
-    TEV_HANDLE_TYPE_IDLE = 0
+    TEV_HANDLE_TYPE_IDLE,
+    TEV_HANDLE_TYPE_ASYNC
 } tev_handle_type_t;
 
 
@@ -35,17 +36,23 @@ typedef enum {
     QUEUE idle_queue[2]; \
     tev_idle_cb cb;
 
+#define TEV_HANDLE_ASYNC_FILEDS \
+    QUEUE queue[2]; \
+    tev_async_cb cb;
+
 
 typedef struct tev_handle_s tev_handle_t;
 typedef struct tev_timer_s tev_timer_t;
 typedef struct tev_io_s tev_io_t;
 typedef struct tev_idle_s tev_idle_t;
+typedef struct tev_async_s tev_async_t;
 
 
 typedef void (*tev_handle_cb)(tev_handle_t *);
 typedef void (*tev_timer_cb)(tev_timer_t *);
 typedef void (*tev_io_cb)(tev_io_t *);
 typedef void (*tev_idle_cb)(tev_idle_t *);
+typedef void (*tev_async_cb)(tev_async_t *);
 
 
 typedef struct {
@@ -80,6 +87,11 @@ struct tev_io_s {
 struct tev_idle_s {
     TEV_HANDLE_FIELDS
     TEV_HANDLE_IDLE_FILEDS
+};
+
+struct tev_async_s {
+    TEV_HANDLE_FIELDS
+    TEV_HANDLE_ASYNC_FILEDS
 };
 
 
@@ -118,5 +130,11 @@ tev_idle_start(tev_idle_t *handle, tev_idle_cb cb);
 
 int
 tev_idle_stop(tev_idle_t *handle);
+
+int
+tev_async_init(tev_loop_t *loop, tev_async_t *handle, tev_async_cb cb);
+
+int
+tev_async_send(tev_async_t *handle);
 
 #endif
