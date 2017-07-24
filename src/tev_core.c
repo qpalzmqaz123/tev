@@ -14,7 +14,7 @@ tev__wait_event(tev_loop_t *loop, uint64_t timeout)
     return 0;
 }
 
-static int
+static void
 tev__process_event(tev_loop_t *loop)
 {
     QUEUE *q;
@@ -22,21 +22,22 @@ tev__process_event(tev_loop_t *loop)
 
     tev__mutex_lock();
 
-    while (!QUEUE_EMPTY(loop->active_async_queue)) {
-        q = QUEUE_HEAD(loop->active_async_queue);
+    if (QUEUE_EMPTY(loop->active_async_queue)) {
+        goto EXIT;
+    }
 
+    QUEUE_FOREACH(q, loop->active_async_queue) {
         handle = QUEUE_DATA(q, tev_async_t, queue);
 
         if (NULL != handle->cb) {
             handle->cb(handle);
         }
-
-        QUEUE_REMOVE(q);
     }
 
-    tev__mutex_unlock();
+    QUEUE_INIT(loop->active_async_queue);
 
-    return 0;
+EXIT:
+    tev__mutex_unlock();
 }
 
 static void
@@ -44,6 +45,10 @@ tev__process_timer(tev_loop_t *loop)
 {
     QUEUE *q;
     tev_timer_t *handle;
+
+    if (QUEUE_EMPTY(loop->timer_queue)) {
+        return;
+    }
 
     QUEUE_FOREACH(q, loop->timer_queue) {
         handle = QUEUE_DATA(q, tev_timer_t, timer_queue);
@@ -63,6 +68,10 @@ tev__process_idle(tev_loop_t *loop)
 {
     QUEUE *q;
     tev_idle_t *handle;
+
+    if (QUEUE_EMPTY(loop->idle_queue)) {
+        return;
+    }
 
     QUEUE_FOREACH(q, loop->idle_queue) {
         handle = QUEUE_DATA(q, tev_idle_t, idle_queue);

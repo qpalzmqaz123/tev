@@ -23,5 +23,7 @@ tev_async_send(tev_async_t *handle)
 
     tev__mutex_unlock();
 
+    tev__event_set();
+
     return 0;
 }
