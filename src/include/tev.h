@@ -1,8 +1,9 @@
 #ifndef __TEV_H__
 #define __TEV_H__
 
-#include "queue.h"
 #include <stdint.h>
+#include "queue.h"
+#include "tev_conf.h"
 
 
 #define TEV_ASSERT_NOT_NULL(x) do { \
@@ -66,6 +67,7 @@ typedef struct {
     QUEUE handle_queue[2];
     QUEUE timer_queue[2];
     QUEUE idle_queue[2];
+    QUEUE active_async_queue[2];
     int is_cancel;
     tev_heap_fn_t heap_fn;
     uint64_t time;

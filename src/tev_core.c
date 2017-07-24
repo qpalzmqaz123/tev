@@ -8,8 +8,32 @@ tev__update_time(tev_loop_t *loop)
 }
 
 static int
-tev__wait_io(tev_loop_t *loop, uint64_t timeout)
+tev__wait_event(tev_loop_t *loop, uint64_t timeout)
 {
+    tev__event_wait(timeout);
+    return 0;
+}
+
+static int
+tev__process_event(tev_loop_t *loop)
+{
+    QUEUE *q;
+    tev_async_t *handle;
+
+    tev__mutex_lock();
+
+    QUEUE_FOREACH(q, loop->active_async_queue) {
+        handle = QUEUE_DATA(q, tev_async_t, queue);
+
+        if (NULL != handle->cb) {
+            handle->cb(handle);
+        }
+
+        QUEUE_REMOVE(q);
+    }
+
+    tev__mutex_unlock();
+
     return 0;
 }
 
@@ -72,7 +96,8 @@ tev_run(tev_loop_t *loop)
         tev__process_idle(loop);
 
         timeout = tev__get_timeout(loop);
-        tev__wait_io(loop, timeout);
+        tev__wait_event(loop, timeout);
+        tev__process_event(loop);
     }
 
     return 0;
