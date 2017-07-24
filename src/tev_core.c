@@ -22,7 +22,9 @@ tev__process_event(tev_loop_t *loop)
 
     tev__mutex_lock();
 
-    QUEUE_FOREACH(q, loop->active_async_queue) {
+    while (!QUEUE_EMPTY(loop->active_async_queue)) {
+        q = QUEUE_HEAD(loop->active_async_queue);
+
         handle = QUEUE_DATA(q, tev_async_t, queue);
 
         if (NULL != handle->cb) {
