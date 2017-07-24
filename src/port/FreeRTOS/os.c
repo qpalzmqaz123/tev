@@ -53,4 +53,10 @@ tev__event_set()
 {
     xSemaphoreGive( xSemaTxDone );
 }
+
+void
+tev__event_set_from_isr()
+{
+    xSemaphoreGiveFromISR( xSemaTxDone, NULL );
+}
 #endif

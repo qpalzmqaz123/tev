@@ -68,4 +68,10 @@ tev__event_set()
     pthread_cond_signal(&ev_cond);
     pthread_mutex_unlock(&ev_lock);
 }
+
+void
+tev__event_set_from_isr()
+{
+
+}
 #endif

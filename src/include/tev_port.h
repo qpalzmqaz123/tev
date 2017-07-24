@@ -22,6 +22,9 @@ tev__event_wait(uint64_t timeout);
 
 void
 tev__event_set();
+
+void
+tev__event_set_from_isr();
 #endif
 
 #endif

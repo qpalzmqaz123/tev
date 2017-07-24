@@ -27,3 +27,13 @@ tev_async_send(tev_async_t *handle)
 
     return 0;
 }
+
+int
+tev_async_send_from_isr(tev_async_t *handle)
+{
+    QUEUE_INSERT_TAIL(handle->loop->active_async_queue, handle->queue);
+
+    tev__event_set_from_isr();
+
+    return 0;
+}
