@@ -139,4 +139,7 @@ tev_async_init(tev_loop_t *loop, tev_async_t *handle, tev_async_cb cb);
 int
 tev_async_send(tev_async_t *handle);
 
+int
+tev_async_send_from_isr(tev_async_t *handle);
+
 #endif
