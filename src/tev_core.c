@@ -53,7 +53,7 @@ tev__process_timer(tev_loop_t *loop)
     QUEUE_FOREACH(q, loop->timer_queue) {
         handle = QUEUE_DATA(q, tev_timer_t, timer_queue);
 
-        if (handle->time > handle->loop->time) return;
+        if (handle->time > handle->loop->time) continue;
 
         if (NULL != handle->cb) {
             handle->cb(handle);
