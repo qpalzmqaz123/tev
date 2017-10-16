@@ -109,6 +109,9 @@ tev_loop_create(tev_heap_fn_t *p);
 tev_loop_t *
 tev_default_loop(void);
 
+void
+tev_loop_delete(tev_loop_t *loop);
+
 int
 tev_run(tev_loop_t *loop);
 

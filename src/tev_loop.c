@@ -49,3 +49,7 @@ tev_default_loop(void)
     return default_loop;
 }
 
+void
+tev_loop_delete(tev_loop_t *loop) {
+    loop->heap_fn.free(loop);
+}
