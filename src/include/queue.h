@@ -91,10 +91,10 @@ typedef void *QUEUE[2];
 
 #define QUEUE_INSERT_TAIL(h, q)                                               \
   do {                                                                        \
+    QUEUE_NEXT(q) = (h);                                                      \
     QUEUE_PREV(q) = QUEUE_PREV(h);                                            \
     QUEUE_PREV_NEXT(q) = (q);                                                 \
     QUEUE_PREV(h) = (q);                                                      \
-    QUEUE_NEXT(q) = (h);                                                      \
   }                                                                           \
   while (0)
 
