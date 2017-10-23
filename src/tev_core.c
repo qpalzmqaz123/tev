@@ -55,11 +55,11 @@ tev__process_timer(tev_loop_t *loop)
 
         if (handle->time > handle->loop->time) continue;
 
+        handle->time = handle->loop->time + handle->repeat;
+
         if (NULL != handle->cb) {
             handle->cb(handle);
         }
-
-        handle->time = handle->loop->time + handle->repeat;
     }
 }
 
