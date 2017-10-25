@@ -43,19 +43,19 @@ EXIT:
 static void
 tev__process_timer(tev_loop_t *loop)
 {
-    QUEUE *q;
+    struct heap_node *min;
     tev_timer_t *handle;
 
-    if (QUEUE_EMPTY(loop->timer_queue)) {
+    if (0 == loop->timer_heap.nelts) {
         return;
     }
 
-    QUEUE_FOREACH(q, loop->timer_queue) {
-        handle = QUEUE_DATA(q, tev_timer_t, timer_queue);
+    min = heap_min(&loop->timer_heap);
+    handle = (tev_timer_t *)((size_t)min - offsetof(tev_timer_t, heap_node));
 
-        if (handle->time > handle->loop->time) continue;
-
-        handle->time = handle->loop->time + handle->repeat;
+    /* check if timeout */
+    if (handle->loop->time > handle->time) {
+        handle->time += handle->repeat;
 
         if (NULL != handle->cb) {
             handle->cb(handle);
@@ -96,8 +96,8 @@ tev_run(tev_loop_t *loop)
     uint64_t timeout = 0;
 
     while (0 == loop->is_cancel) {
-        if (QUEUE_EMPTY(loop->handle_queue) &&
-            QUEUE_EMPTY(loop->timer_queue) &&
+        if (0 == loop->timer_heap.nelts &&
+            QUEUE_EMPTY(loop->handle_queue) &&
             QUEUE_EMPTY(loop->idle_queue)) {
             break;
         }

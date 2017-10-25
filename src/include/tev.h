@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "queue.h"
+#include "heap-inl.h"
 #include "tev_conf.h"
 
 
@@ -28,7 +29,7 @@ typedef enum {
     int is_cancel;
 
 #define TEV_HANDLE_TIMER_FIELDS \
-    QUEUE timer_queue[2]; \
+    struct heap_node heap_node; \
     uint64_t time; \
     uint64_t repeat; \
     tev_timer_cb cb;
@@ -64,8 +65,8 @@ typedef struct {
 } tev_heap_fn_t;
 
 typedef struct {
+    struct heap timer_heap;
     QUEUE handle_queue[2];
-    QUEUE timer_queue[2];
     QUEUE idle_queue[2];
     QUEUE active_async_queue[2];
     int is_cancel;
