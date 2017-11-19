@@ -1,6 +1,6 @@
 #include "tev.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 uint64_t
 tev__get_time(void)

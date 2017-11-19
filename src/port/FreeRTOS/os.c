@@ -1,9 +1,9 @@
 #include "tev.h"
 #include <pthread.h>
 #include <sys/time.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/semphr.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
 
 #if TEV_CONF_ENABLE_OS == 1
 
