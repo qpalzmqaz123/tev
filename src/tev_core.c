@@ -29,7 +29,7 @@ tev__process_event(tev_loop_t *loop)
     QUEUE_FOREACH(q, loop->active_async_queue) {
         handle = QUEUE_DATA(q, tev_async_t, queue);
 
-        if (NULL != handle->cb) {
+        if (NULL != handle->cb && !handle->is_cancel) {
             handle->cb(handle);
         }
     }
@@ -122,4 +122,16 @@ tev__handle_init(tev_loop_t *loop, tev_handle_t *handle)
     handle->is_cancel = 0;
 
     return 0;
+}
+
+void
+tev_close(tev_handle_t *handle, tev_close_cb close_cb)
+{
+    switch (handle->handle_type) {
+        case TEV_HANDLE_TYPE_ASYNC:
+            tev_async_close((tev_async_t *)handle);
+            break;
+        default:
+            break;
+    }
 }

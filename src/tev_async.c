@@ -28,6 +28,12 @@ tev_async_send(tev_async_t *handle)
     return 0;
 }
 
+void
+tev_async_close(tev_async_t *handle)
+{
+    handle->is_cancel = 1;
+}
+
 int
 tev_async_send_from_isr(tev_async_t *handle)
 {

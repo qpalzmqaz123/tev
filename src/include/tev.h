@@ -55,6 +55,7 @@ typedef void (*tev_timer_cb)(tev_timer_t *);
 typedef void (*tev_io_cb)(tev_io_t *);
 typedef void (*tev_idle_cb)(tev_idle_t *);
 typedef void (*tev_async_cb)(tev_async_t *);
+typedef void (*tev_close_cb)(tev_handle_t* handle);
 
 
 typedef struct {
@@ -113,9 +114,14 @@ tev_default_loop(void);
 void
 tev_loop_delete(tev_loop_t *loop);
 
+/* core */
 int
 tev_run(tev_loop_t *loop);
 
+void
+tev_close(tev_handle_t* handle, tev_close_cb close_cb);
+
+/* timer */
 int
 tev_timer_init(tev_loop_t *loop, tev_timer_t *handle);
 
@@ -128,6 +134,7 @@ tev_timer_start(tev_timer_t *handle,
 int
 tev_timer_stop(tev_timer_t *handle);
 
+/* idle */
 int
 tev_idle_init(tev_loop_t *loop, tev_idle_t *handle);
 
@@ -137,6 +144,7 @@ tev_idle_start(tev_idle_t *handle, tev_idle_cb cb);
 int
 tev_idle_stop(tev_idle_t *handle);
 
+/* async */
 int
 tev_async_init(tev_loop_t *loop, tev_async_t *handle, tev_async_cb cb);
 
@@ -145,5 +153,8 @@ tev_async_send(tev_async_t *handle);
 
 int
 tev_async_send_from_isr(tev_async_t *handle);
+
+void
+tev_async_close(tev_async_t *handle);
 
 #endif
