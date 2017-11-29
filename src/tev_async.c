@@ -10,6 +10,8 @@ tev_async_init(tev_loop_t *loop,
 
     handle->cb = cb;
     handle->handle_type = TEV_HANDLE_TYPE_ASYNC;
+
+    QUEUE_INSERT_TAIL(handle->loop->handle_queue, handle->handle_queue);
     
     return 0;
 }
@@ -31,6 +33,7 @@ tev_async_send(tev_async_t *handle)
 void
 tev_async_close(tev_async_t *handle)
 {
+    QUEUE_REMOVE(handle->handle_queue);
     handle->is_cancel = 1;
 }
 
