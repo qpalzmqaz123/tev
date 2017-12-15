@@ -55,7 +55,8 @@ tev__process_timer(tev_loop_t *loop)
 
     /* check if timeout */
     if (handle->loop->time > handle->time) {
-        handle->time += handle->repeat;
+        tev_timer_stop(handle);
+        tev_timer_start(handle, handle->cb, handle->repeat, handle->repeat);
 
         if (NULL != handle->cb) {
             handle->cb(handle);
@@ -85,9 +86,20 @@ tev__process_idle(tev_loop_t *loop)
 static uint64_t
 tev__get_timeout(tev_loop_t *loop)
 {
+    uint64_t timeout = 1;
+    struct heap_node *min;
+    tev_timer_t *handle;
+
     tev__update_time(loop);
 
-    return 1;
+    if (loop->timer_heap.nelts) {
+        min = heap_min(&loop->timer_heap);
+        handle = (tev_timer_t *)((size_t)min - offsetof(tev_timer_t, heap_node));
+
+        timeout = handle->loop->time > handle->time ? 0 : handle->time - handle->loop->time;
+    }
+
+    return timeout;
 }
 
 int
