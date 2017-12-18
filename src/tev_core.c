@@ -40,28 +40,38 @@ EXIT:
     tev__mutex_unlock();
 }
 
-static void
+static uint64_t
 tev__process_timer(tev_loop_t *loop)
 {
+    uint64_t timeout = 0;
     struct heap_node *min;
     tev_timer_t *handle;
 
-    if (0 == loop->timer_heap.nelts) {
-        return;
-    }
-
-    min = heap_min(&loop->timer_heap);
-    handle = (tev_timer_t *)((size_t)min - offsetof(tev_timer_t, heap_node));
-
-    /* check if timeout */
-    if (handle->loop->time > handle->time) {
-        tev_timer_stop(handle);
-        tev_timer_start(handle, handle->cb, handle->repeat, handle->repeat);
-
-        if (NULL != handle->cb) {
-            handle->cb(handle);
+    do {
+        if (0 == loop->timer_heap.nelts) {
+            timeout = (uint64_t)-1;
+            break;
         }
-    }
+
+        min = heap_min(&loop->timer_heap);
+        handle = (tev_timer_t *)((size_t)min - offsetof(tev_timer_t, heap_node));
+
+        /* calulate timeout */
+        timeout = handle->loop->time > handle->time ? 0 : handle->time - handle->loop->time;
+
+        if (0 == timeout) {
+            tev_timer_stop(handle);
+            tev_timer_start(handle, handle->cb, handle->repeat, handle->repeat);
+
+            if (NULL != handle->cb) {
+                handle->cb(handle);
+            }
+        }
+    } while (0 == timeout);
+
+    printf("timeout: %llu\r\n", timeout);
+
+    return timeout;
 }
 
 static void
@@ -83,25 +93,6 @@ tev__process_idle(tev_loop_t *loop)
     }
 }
 
-static uint64_t
-tev__get_timeout(tev_loop_t *loop)
-{
-    uint64_t timeout = 1;
-    struct heap_node *min;
-    tev_timer_t *handle;
-
-    tev__update_time(loop);
-
-    if (loop->timer_heap.nelts) {
-        min = heap_min(&loop->timer_heap);
-        handle = (tev_timer_t *)((size_t)min - offsetof(tev_timer_t, heap_node));
-
-        timeout = handle->loop->time > handle->time ? 0 : handle->time - handle->loop->time;
-    }
-
-    return timeout;
-}
-
 int
 tev_run(tev_loop_t *loop)
 {
@@ -115,10 +106,9 @@ tev_run(tev_loop_t *loop)
         }
 
         tev__update_time(loop);
-        tev__process_timer(loop);
-        tev__process_idle(loop);
 
-        timeout = tev__get_timeout(loop);
+        tev__process_idle(loop);
+        timeout = tev__process_timer(loop);
         tev__wait_event(loop, timeout);
         tev__process_event(loop);
     }

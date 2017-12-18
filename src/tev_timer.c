@@ -27,7 +27,7 @@ tev_timer_start(tev_timer_t *handle,
                 uint64_t time,
                 uint64_t repeat)
 {
-    handle->time = tev__get_time() + time;
+    handle->time = handle->loop->time + time;
     handle->repeat = repeat;
     handle->cb = cb;
 
