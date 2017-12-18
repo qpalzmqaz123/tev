@@ -69,8 +69,6 @@ tev__process_timer(tev_loop_t *loop)
         }
     } while (0 == timeout);
 
-    printf("timeout: %llu\r\n", timeout);
-
     return timeout;
 }
 
