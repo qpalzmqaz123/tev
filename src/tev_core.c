@@ -107,7 +107,8 @@ tev_run(tev_loop_t *loop)
 
         tev__process_idle(loop);
         timeout = tev__process_timer(loop);
-        if (QUEUE_EMPTY(loop->active_async_queue)) {
+        if (QUEUE_EMPTY(loop->active_async_queue) &&
+            !QUEUE_EMPTY(loop->handle_queue)) {
             tev__wait_event(loop, timeout);
         }
         tev__process_event(loop);
