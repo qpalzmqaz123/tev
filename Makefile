@@ -1,6 +1,6 @@
 FILES = $(shell find ./src -maxdepth 1 -name '*.c')
 FILES += $(shell find ./src/port/unix -maxdepth 1 -name '*.c')
-FILES += main.c
+FILES += test.c
 
 CFLAGS += -g -Wall
 CFLAGS += -I./src/include -lpthread

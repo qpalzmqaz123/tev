@@ -19,8 +19,6 @@ async_callback1(tev_async_t *handle)
 {
     static uint32_t i = 0;
     printf("--- async: %d\n", i++);
-
-    tev_close((tev_handle_t *)handle, NULL);
 }
 
 static void
