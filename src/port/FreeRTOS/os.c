@@ -1,6 +1,4 @@
 #include "tev.h"
-#include <pthread.h>
-#include <sys/time.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"

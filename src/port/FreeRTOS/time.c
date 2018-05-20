@@ -5,5 +5,5 @@
 uint64_t
 tev__get_time(void)
 {
-    return (uint64_t)xTaskGetTickCount();
+    return (uint64_t)xTaskGetTickCount() * 1000 / configTICK_RATE_HZ;
 }
