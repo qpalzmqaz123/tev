@@ -41,7 +41,7 @@ tev__event_wait(uint64_t timeout)
 {
 	int res = 0;
 
-    xSemaphoreTake(xSemaTxDone, timeout);
+    xSemaphoreTake(xSemaTxDone, timeout * configTICK_RATE_HZ / 1000);
 
     return res;
 }
