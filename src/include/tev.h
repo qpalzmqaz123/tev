@@ -25,6 +25,7 @@ typedef enum {
     void *data; \
     tev_loop_t *loop; \
     QUEUE handle_queue[2]; \
+    QUEUE active_queue[2]; \
     tev_handle_type_t handle_type; \
     int is_cancel;
 
@@ -39,7 +40,6 @@ typedef enum {
     tev_idle_cb cb;
 
 #define TEV_HANDLE_ASYNC_FILEDS \
-    QUEUE queue[2]; \
     tev_async_cb cb;
 
 
@@ -69,7 +69,7 @@ typedef struct {
     struct heap timer_heap;
     QUEUE handle_queue[2];
     QUEUE idle_queue[2];
-    QUEUE active_async_queue[2];
+    QUEUE active_queue[2];
     int is_cancel;
     tev_heap_fn_t heap_fn;
     uint64_t time;

@@ -18,23 +18,36 @@ static void
 tev__process_event(tev_loop_t *loop)
 {
     QUEUE *q;
-    tev_async_t *handle;
+    tev_handle_t *handle;
 
     tev__mutex_lock();
 
-    if (QUEUE_EMPTY(loop->active_async_queue)) {
+    if (QUEUE_EMPTY(loop->active_queue)) {
         goto EXIT;
     }
 
-    QUEUE_FOREACH(q, loop->active_async_queue) {
-        handle = QUEUE_DATA(q, tev_async_t, queue);
+    QUEUE_FOREACH(q, loop->active_queue) {
+        handle = QUEUE_DATA(q, tev_handle_t, active_queue);
 
-        if (NULL != handle->cb && !handle->is_cancel) {
-            handle->cb(handle);
+        if (!handle->is_cancel) {
+            switch (handle->handle_type) {
+            case TEV_HANDLE_TYPE_TIMER:
+                if (NULL != ((tev_timer_t *)handle)->cb) {
+                    ((tev_timer_t *)handle)->cb((tev_timer_t *)handle);
+                }
+                break;
+            case TEV_HANDLE_TYPE_ASYNC:
+                if (NULL != ((tev_async_t *)handle)->cb) {
+                    ((tev_async_t *)handle)->cb((tev_async_t *)handle);
+                }
+                break;
+            default:
+                break;
+            }
         }
     }
 
-    QUEUE_INIT(loop->active_async_queue);
+    QUEUE_INIT(loop->active_queue);
 
 EXIT:
     tev__mutex_unlock();
@@ -47,27 +60,22 @@ tev__process_timer(tev_loop_t *loop)
     struct heap_node *min;
     tev_timer_t *handle;
 
-    do {
-        if (0 == loop->timer_heap.nelts) {
-            timeout = (uint64_t)-1;
-            break;
-        }
+    if (0 == loop->timer_heap.nelts) {
+        return (uint64_t)-1;
+    }
 
-        min = heap_min(&loop->timer_heap);
-        handle = (tev_timer_t *)((size_t)min - offsetof(tev_timer_t, heap_node));
+    min = heap_min(&loop->timer_heap);
+    handle = (tev_timer_t *)((size_t)min - offsetof(tev_timer_t, heap_node));
 
-        /* calulate timeout */
-        timeout = handle->loop->time > handle->time ? 0 : handle->time - handle->loop->time;
+    /* calulate timeout */
+    timeout = handle->loop->time > handle->time ? 0 : handle->time - handle->loop->time;
 
-        if (0 == timeout) {
-            tev_timer_stop(handle);
-            tev_timer_start(handle, handle->cb, handle->repeat, handle->repeat);
+    if (0 == timeout) {
+        tev_timer_stop(handle);
+        tev_timer_start(handle, handle->cb, handle->repeat, handle->repeat);
 
-            if (NULL != handle->cb) {
-                handle->cb(handle);
-            }
-        }
-    } while (0 == timeout);
+        QUEUE_INSERT_TAIL(loop->active_queue, handle->active_queue);
+    }
 
     return timeout;
 }
@@ -107,8 +115,7 @@ tev_run(tev_loop_t *loop)
 
         tev__process_idle(loop);
         timeout = tev__process_timer(loop);
-        if (QUEUE_EMPTY(loop->active_async_queue) &&
-            !QUEUE_EMPTY(loop->handle_queue)) {
+        if (QUEUE_EMPTY(loop->active_queue)) {
             tev__wait_event(loop, timeout);
         }
         tev__process_event(loop);

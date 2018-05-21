@@ -21,7 +21,7 @@ tev_loop_create(tev_heap_fn_t *p)
     heap_init(&loop->timer_heap);
     QUEUE_INIT(loop->handle_queue);
     QUEUE_INIT(loop->idle_queue);
-    QUEUE_INIT(loop->active_async_queue);
+    QUEUE_INIT(loop->active_queue);
     loop->is_cancel = 0;
     loop->time = tev__get_time();
 
