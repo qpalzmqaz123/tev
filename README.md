@@ -125,10 +125,10 @@ main(void)
 
 ### Porting
 
-- void **tev__mutex_init**()
-- void **tev__mutex_lock**()
-- void **tev__mutex_unlock**()
-- void **tev__event_init**()
-- int **tev__event_wait**(uint64_t timeout)
-- void **tev__event_set**()
+- void **tev__mutex_init**(void **pdata)
+- void **tev__mutex_lock**(void *data)
+- void **tev__mutex_unlock**(void *data)
+- void **tev__event_init**(void **pdata)
+- int **tev__event_wait**(void *data, uint64_t timeout)
+- void **tev__event_set**(void *data)
 - uint64_t **tev__get_time**(void)
