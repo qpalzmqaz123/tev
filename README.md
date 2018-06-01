@@ -122,7 +122,6 @@ main(void)
 - int **tev_async_init**(tev_loop_t *loop, tev_async_t *handle, tev_async_cb cb)
 - int **tev_async_send**(tev_async_t *handle)
 - void **tev_async_close**(tev_async_t *handle)
-- int **tev_async_send_from_isr**(tev_async_t *handle)
 
 ### Porting
 
@@ -132,5 +131,4 @@ main(void)
 - void **tev__event_init**()
 - int **tev__event_wait**(uint64_t timeout)
 - void **tev__event_set**()
-- void **tev__event_set_from_isr**()
 - uint64_t **tev__get_time**(void)

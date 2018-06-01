@@ -36,13 +36,3 @@ tev_async_close(tev_async_t *handle)
     QUEUE_REMOVE(handle->handle_queue);
     handle->is_cancel = 1;
 }
-
-int
-tev_async_send_from_isr(tev_async_t *handle)
-{
-    QUEUE_INSERT_TAIL(handle->loop->active_queue, handle->active_queue);
-
-    tev__event_set_from_isr();
-
-    return 0;
-}

@@ -85,9 +85,4 @@ tev__event_set(void *data)
     pthread_mutex_unlock(&event->ev_lock);
 }
 
-void
-tev__event_set_from_isr()
-{
-
-}
 #endif

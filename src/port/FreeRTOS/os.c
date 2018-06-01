@@ -1,60 +1,51 @@
+#include <stdlib.h>
 #include "tev.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
+#include "tev_port.h"
 
 #if TEV_CONF_ENABLE_OS == 1
 
-static xSemaphoreHandle xQueueMutex;
-static xSemaphoreHandle xSemaTxDone;
-
 void
-tev__mutex_init()
+tev__mutex_init(void **pdata)
 {
-    /* Create Mutex lock */
-    xQueueMutex = xSemaphoreCreateMutex();
-    configASSERT (xQueueMutex != NULL);
+    TEV_ASSERT_NOT_NULL(*pdata = xSemaphoreCreateMutex());
 }
 
 void
-tev__mutex_lock()
+tev__mutex_lock(void *data)
 {
-    xSemaphoreTake( xQueueMutex, portMAX_DELAY );
+    xSemaphoreTake((xSemaphoreHandle)data, portMAX_DELAY);
 }
 
 void
-tev__mutex_unlock()
+tev__mutex_unlock(void *data)
 {
-    xSemaphoreGive( xQueueMutex );
+    xSemaphoreGive((xSemaphoreHandle)data);
 }
 
 void
-tev__event_init()
+tev__event_init(void **pdata)
 {
-    /* Queue Semaphore */ 
-    vSemaphoreCreateBinary( xSemaTxDone );
-    configASSERT ( xSemaTxDone != NULL );
+    vSemaphoreCreateBinary(*pdata);
+    TEV_ASSERT_NOT_NULL(*pdata);
 }
 
 int
-tev__event_wait(uint64_t timeout)
+tev__event_wait(void *data, uint64_t timeout)
 {
-	int res = 0;
+    int res = 0;
 
-    xSemaphoreTake(xSemaTxDone, timeout * configTICK_RATE_HZ / 1000);
+    xSemaphoreTake(data, timeout * configTICK_RATE_HZ / 1000);
 
     return res;
 }
 
 void
-tev__event_set()
+tev__event_set(void *data)
 {
-    xSemaphoreGive( xSemaTxDone );
+    xSemaphoreGive(data);
 }
 
-void
-tev__event_set_from_isr()
-{
-    xSemaphoreGiveFromISR( xSemaTxDone, NULL );
-}
 #endif

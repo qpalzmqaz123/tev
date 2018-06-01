@@ -62,12 +62,6 @@ tev__event_set()
     os->event_set(event);
 }
 
-void
-tev__event_set_from_isr()
-{
-    tev__event_set();
-}
-
 uint64_t
 tev__get_time(void)
 {
