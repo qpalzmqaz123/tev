@@ -6,22 +6,22 @@ tev__get_time(void);
 
 #if TEV_CONF_ENABLE_OS == 1
 void
-tev__mutex_init();
+tev__mutex_init(void *pdata);
 
 void
-tev__mutex_lock();
+tev__mutex_lock(void *data);
 
 void
-tev__mutex_unlock();
+tev__mutex_unlock(void *data);
 
 void
-tev__event_init();
+tev__event_init(void **pdata);
 
 int
-tev__event_wait(uint64_t timeout);
+tev__event_wait(void *data, uint64_t timeout);
 
 void
-tev__event_set();
+tev__event_set(void *data);
 
 void
 tev__event_set_from_isr();

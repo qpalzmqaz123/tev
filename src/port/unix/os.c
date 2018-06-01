@@ -8,32 +8,32 @@ static pthread_mutex_t ev_lock;
 static pthread_cond_t ev_cond;
 
 void
-tev__mutex_init()
+tev__mutex_init(void **pdata)
 {
     pthread_mutex_init(&lock, NULL);
 }
 
 void
-tev__mutex_lock()
+tev__mutex_lock(void *data)
 {
     pthread_mutex_lock(&lock);
 }
 
 void
-tev__mutex_unlock()
+tev__mutex_unlock(void *data)
 {
     pthread_mutex_unlock(&lock);
 }
 
 void
-tev__event_init()
+tev__event_init(void *pdata)
 {
     pthread_mutex_init(&ev_lock, NULL);
     pthread_cond_init(&ev_cond, NULL);
 }
 
 int
-tev__event_wait(uint64_t timeout)
+tev__event_wait(void *data, uint64_t timeout)
 {
     struct timeval now;
     struct timeval wait;
@@ -62,7 +62,7 @@ tev__event_wait(uint64_t timeout)
 }
 
 void
-tev__event_set()
+tev__event_set(void *data)
 {
     pthread_mutex_lock(&ev_lock);
     pthread_cond_signal(&ev_cond);

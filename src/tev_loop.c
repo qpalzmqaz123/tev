@@ -15,6 +15,7 @@ tev_loop_create(tev_heap_fn_t *p)
 
     loop = (tev_loop_t *)p->malloc(sizeof(tev_loop_t));
     TEV_ASSERT_NOT_NULL(loop);
+    memset(loop, 0, sizeof(tev_loop_t));
 
     /* init */
     memcpy(&loop->heap_fn, p, sizeof(tev_heap_fn_t));
@@ -26,8 +27,8 @@ tev_loop_create(tev_heap_fn_t *p)
     loop->time = tev__get_time();
 
 #if TEV_CONF_ENABLE_OS == 1
-    tev__mutex_init();
-    tev__event_init();
+    tev__mutex_init(&loop->mutex_handle);
+    tev__event_init(&loop->event_handle);
 #endif
 
     return loop;

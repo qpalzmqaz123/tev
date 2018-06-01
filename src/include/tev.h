@@ -73,6 +73,8 @@ typedef struct {
     int is_cancel;
     tev_heap_fn_t heap_fn;
     uint64_t time;
+    void *mutex_handle;
+    void *event_handle;
 } tev_loop_t;
 
 struct tev_timer_s {

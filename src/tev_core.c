@@ -10,7 +10,7 @@ tev__update_time(tev_loop_t *loop)
 static int
 tev__wait_event(tev_loop_t *loop, uint64_t timeout)
 {
-    tev__event_wait(timeout);
+    tev__event_wait(loop->event_handle, timeout);
     return 0;
 }
 
@@ -20,7 +20,7 @@ tev__process_event(tev_loop_t *loop)
     QUEUE *q;
     tev_handle_t *handle;
 
-    tev__mutex_lock();
+    tev__mutex_lock(loop->mutex_handle);
 
     if (QUEUE_EMPTY(loop->active_queue)) {
         goto EXIT;
@@ -50,7 +50,7 @@ tev__process_event(tev_loop_t *loop)
     QUEUE_INIT(loop->active_queue);
 
 EXIT:
-    tev__mutex_unlock();
+    tev__mutex_unlock(loop->mutex_handle);
 }
 
 static uint64_t

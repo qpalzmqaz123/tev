@@ -19,13 +19,13 @@ tev_async_init(tev_loop_t *loop,
 int
 tev_async_send(tev_async_t *handle)
 {
-    tev__mutex_lock();
+    tev__mutex_lock(handle->loop->mutex_handle);
 
     QUEUE_INSERT_TAIL(handle->loop->active_queue, handle->active_queue);
 
-    tev__mutex_unlock();
+    tev__mutex_unlock(handle->loop->mutex_handle);
 
-    tev__event_set();
+    tev__event_set(handle->loop->event_handle);
 
     return 0;
 }
