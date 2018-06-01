@@ -6,7 +6,7 @@ tev__get_time(void);
 
 #if TEV_CONF_ENABLE_OS == 1
 void
-tev__mutex_init(void *pdata);
+tev__mutex_init(void **pdata);
 
 void
 tev__mutex_lock(void *data);
