@@ -121,6 +121,9 @@ int
 tev_run(tev_loop_t *loop);
 
 void
+tev_cleanup(tev_loop_t *loop);
+
+void
 tev_close(tev_handle_t* handle, tev_close_cb close_cb);
 
 /* timer */

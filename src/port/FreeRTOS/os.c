@@ -26,6 +26,12 @@ tev__mutex_unlock(void *data)
 }
 
 void
+tev__mutex_deinit(void *data)
+{
+    vSemaphoreDelete(data);
+}
+
+void
 tev__event_init(void **pdata)
 {
     vSemaphoreCreateBinary(*pdata);
@@ -46,6 +52,12 @@ void
 tev__event_set(void *data)
 {
     xSemaphoreGive(data);
+}
+
+void
+tev__event_deinit(void *data)
+{
+    vSemaphoreDelete(data);
 }
 
 #endif

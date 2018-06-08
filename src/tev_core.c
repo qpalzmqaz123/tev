@@ -124,6 +124,12 @@ tev_run(tev_loop_t *loop)
     return 0;
 }
 
+void
+tev_cleanup(tev_loop_t *loop)
+{
+    tev_loop_delete(loop);
+}
+
 int
 tev__handle_init(tev_loop_t *loop, tev_handle_t *handle)
 {

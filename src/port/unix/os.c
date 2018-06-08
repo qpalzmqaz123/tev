@@ -31,6 +31,12 @@ tev__mutex_unlock(void *data)
 }
 
 void
+tev__mutex_deinit(void *data)
+{
+    free(data);
+}
+
+void
 tev__event_init(void **pdata)
 {
     pthread_event_t *event;
@@ -83,6 +89,12 @@ tev__event_set(void *data)
     pthread_mutex_lock(&event->ev_lock);
     pthread_cond_signal(&event->ev_cond);
     pthread_mutex_unlock(&event->ev_lock);
+}
+
+void
+tev__event_deinit(void *data)
+{
+    free(data);
 }
 
 #endif

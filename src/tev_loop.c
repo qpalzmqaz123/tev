@@ -53,5 +53,9 @@ tev_default_loop(void)
 
 void
 tev_loop_delete(tev_loop_t *loop) {
+#if TEV_CONF_ENABLE_OS == 1
+    tev__mutex_deinit(loop->mutex_handle);
+    tev__event_deinit(loop->event_handle);
+#endif
     loop->heap_fn.free(loop);
 }

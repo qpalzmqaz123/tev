@@ -9,6 +9,9 @@ void
 tev__mutex_init(void **pdata);
 
 void
+tev__mutex_deinit(void *data);
+
+void
 tev__mutex_lock(void *data);
 
 void
@@ -16,6 +19,9 @@ tev__mutex_unlock(void *data);
 
 void
 tev__event_init(void **pdata);
+
+void
+tev__event_deinit(void *data);
 
 int
 tev__event_wait(void *data, uint64_t timeout);
