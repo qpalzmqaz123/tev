@@ -1,8 +1,8 @@
 #include "tev.h"
 #include "tev_port.h"
 
-static void
-tev__update_time(tev_loop_t *loop)
+void
+tev_update_time(tev_loop_t *loop)
 {
     loop->time = tev__get_time();
 }
@@ -111,7 +111,7 @@ tev_run(tev_loop_t *loop)
             break;
         }
 
-        tev__update_time(loop);
+        tev_update_time(loop);
 
         tev__process_idle(loop);
         timeout = tev__process_timer(loop);
