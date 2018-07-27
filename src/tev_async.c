@@ -19,6 +19,7 @@ tev_async_init(tev_loop_t *loop,
 int
 tev_async_send(tev_async_t *handle)
 {
+    int res = 0;
     QUEUE *q;
     tev_handle_t *h;
 
@@ -28,7 +29,10 @@ tev_async_send(tev_async_t *handle)
     QUEUE_FOREACH(q, handle->loop->active_queue) {
         h = QUEUE_DATA(q, tev_handle_t, active_queue);
 
-        if (h == (tev_handle_t *)handle) goto exit;
+        if (h == (tev_handle_t *)handle) {
+            res = 1;
+            goto exit;
+        }
     }
 
     QUEUE_INSERT_TAIL(handle->loop->active_queue, handle->active_queue);
@@ -40,7 +44,7 @@ tev_async_send(tev_async_t *handle)
 exit:
     tev__mutex_unlock(handle->loop->mutex_handle);
 
-    return 0;
+    return res;
 }
 
 void
