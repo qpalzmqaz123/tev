@@ -47,6 +47,29 @@ exit:
     return res;
 }
 
+bool
+tev_async_prepared(tev_async_t *handle)
+{
+    QUEUE *q;
+    tev_handle_t *h;
+    bool res = true;
+
+    tev__mutex_lock(handle->loop->mutex_handle);
+
+    QUEUE_FOREACH(q, handle->loop->active_queue) {
+        h = QUEUE_DATA(q, tev_handle_t, active_queue);
+
+        if (h == (tev_handle_t *)handle) {
+            res = false;
+            break;
+        }
+    }
+
+    tev__mutex_unlock(handle->loop->mutex_handle);
+
+    return res;
+}
+
 void
 tev_async_close(tev_async_t *handle)
 {

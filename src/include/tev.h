@@ -2,6 +2,7 @@
 #define __TEV_H__
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "queue.h"
 #include "heap-inl.h"
 #include "tev_conf.h"
@@ -158,6 +159,9 @@ tev_async_init(tev_loop_t *loop, tev_async_t *handle, tev_async_cb cb);
 
 int
 tev_async_send(tev_async_t *handle);
+
+bool
+tev_async_prepared(tev_async_t *handle);
 
 void
 tev_async_close(tev_async_t *handle);
