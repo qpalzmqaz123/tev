@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "tev.h"
 #include "tev_port.h"
 
@@ -51,6 +52,25 @@ tev__process_event(tev_loop_t *loop)
 
 EXIT:
     tev__mutex_unlock(loop->mutex_handle);
+}
+
+static void
+tev__process_close_cb(tev_loop_t *loop)
+{
+    QUEUE *q;
+    tev_handle_t *handle;
+
+    if (QUEUE_EMPTY(loop->close_queue)) {
+        return;
+    }
+
+    QUEUE_FOREACH(q, loop->close_queue) {
+        handle = QUEUE_DATA(q, tev_handle_t, close_queue);
+
+        handle->close_cb(handle);
+    }
+
+    QUEUE_INIT(loop->close_queue);
 }
 
 static uint64_t
@@ -119,6 +139,8 @@ tev_run(tev_loop_t *loop)
             tev__wait_event(loop, timeout);
         }
         tev__process_event(loop);
+
+        tev__process_close_cb(loop);
     }
 
     return 0;
@@ -143,11 +165,21 @@ tev__handle_init(tev_loop_t *loop, tev_handle_t *handle)
 void
 tev_close(tev_handle_t *handle, tev_close_cb close_cb)
 {
+    handle->close_cb = close_cb;
+
+    QUEUE_INSERT_TAIL(handle->loop->close_queue, handle->close_queue);
+
     switch (handle->handle_type) {
         case TEV_HANDLE_TYPE_ASYNC:
             tev_async_close((tev_async_t *)handle);
             break;
-        default:
+        case TEV_HANDLE_TYPE_IDLE:
+            tev_idle_stop((tev_idle_t *)handle);
             break;
+        case TEV_HANDLE_TYPE_TIMER:
+            tev_timer_stop((tev_timer_t *)handle);
+            break;
+        default:
+            abort();
     }
 }
