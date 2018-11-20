@@ -144,7 +144,7 @@ tev_timer_start(tev_timer_t *handle,
                 uint64_t repeat);
 
 int
-tev_timer_stop(tev_timer_t *handle);
+tev__timer_stop(tev_timer_t *handle);
 
 /* idle */
 int
@@ -154,7 +154,7 @@ int
 tev_idle_start(tev_idle_t *handle, tev_idle_cb cb);
 
 int
-tev_idle_stop(tev_idle_t *handle);
+tev__idle_stop(tev_idle_t *handle);
 
 /* async */
 int
@@ -167,6 +167,6 @@ bool
 tev_async_prepared(tev_async_t *handle);
 
 void
-tev_async_close(tev_async_t *handle);
+tev__async_close(tev_async_t *handle);
 
 #endif

@@ -21,7 +21,7 @@ timer_callback(tev_timer_t *handle)
 {
     printf("Hello world\n");
 
-    tev_timer_stop(handle);
+    tev_close((tev_handle_t *)handle, NULL);
 }
 
 int
@@ -37,6 +37,8 @@ main(void)
     tev_timer_start(&timer, timer_callback, 1000, 0);
 
     tev_run(loop);
+
+    tev_cleanup(loop);
 
     return 0;
 }
@@ -56,7 +58,7 @@ static void
 async_callback(tev_async_t *handle)
 {
     if (4 == (size_t)handle->data) {
-        tev_async_close(handle);
+        tev_close((tev_handle_t *)handle, NULL);
     }
 
     printf("async: %ld\n", (size_t)handle->data);
@@ -88,6 +90,8 @@ main(void)
 
     tev_run(loop);
 
+    tev_cleanup(loop);
+
     return 0;
 }
 ```
@@ -109,19 +113,16 @@ main(void)
 
 - int **tev_timer_init**(tev_loop_t *loop, tev_timer_t *handle)
 - int **tev_timer_start**(tev_timer_t *handle, tev_timer_cb cb, uint64_t time, uint64_t repeat)
-- int **tev_timer_stop**(tev_timer_t *handle)
 
 ### Idle
 
 - int **tev_idle_init**(tev_loop_t *loop, tev_idle_t *handle)
 - int **tev_idle_start**(tev_idle_t *handle, tev_idle_cb cb)
-- int **tev_idle_stop**(tev_idle_t *handle)
 
 ### Async
 
 - int **tev_async_init**(tev_loop_t *loop, tev_async_t *handle, tev_async_cb cb)
 - int **tev_async_send**(tev_async_t *handle)
-- void **tev_async_close**(tev_async_t *handle)
 
 ### Porting
 

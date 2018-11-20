@@ -37,7 +37,7 @@ tev_timer_start(tev_timer_t *handle,
 }
 
 int
-tev_timer_stop(tev_timer_t *handle)
+tev__timer_stop(tev_timer_t *handle)
 {
     heap_remove(&handle->loop->timer_heap, &handle->heap_node, tev__timer_compare);
 

@@ -71,8 +71,7 @@ tev_async_prepared(tev_async_t *handle)
 }
 
 void
-tev_async_close(tev_async_t *handle)
+tev__async_close(tev_async_t *handle)
 {
     QUEUE_REMOVE(handle->handle_queue);
-    handle->is_cancel = 1;
 }

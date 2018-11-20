@@ -67,7 +67,9 @@ tev__process_close_cb(tev_loop_t *loop)
     QUEUE_FOREACH(q, loop->close_queue) {
         handle = QUEUE_DATA(q, tev_handle_t, close_queue);
 
-        handle->close_cb(handle);
+        if (NULL != handle->close_cb) {
+            handle->close_cb(handle);
+        }
     }
 
     QUEUE_INIT(loop->close_queue);
@@ -91,7 +93,7 @@ tev__process_timer(tev_loop_t *loop)
     timeout = handle->loop->time > handle->time ? 0 : handle->time - handle->loop->time;
 
     if (0 == timeout) {
-        tev_timer_stop(handle);
+        tev__timer_stop(handle);
         tev_timer_start(handle, handle->cb, handle->repeat, handle->repeat);
 
         QUEUE_INSERT_TAIL(loop->active_queue, handle->active_queue);
@@ -165,19 +167,20 @@ tev__handle_init(tev_loop_t *loop, tev_handle_t *handle)
 void
 tev_close(tev_handle_t *handle, tev_close_cb close_cb)
 {
+    handle->is_cancel = 1;
     handle->close_cb = close_cb;
 
     QUEUE_INSERT_TAIL(handle->loop->close_queue, handle->close_queue);
 
     switch (handle->handle_type) {
         case TEV_HANDLE_TYPE_ASYNC:
-            tev_async_close((tev_async_t *)handle);
+            tev__async_close((tev_async_t *)handle);
             break;
         case TEV_HANDLE_TYPE_IDLE:
-            tev_idle_stop((tev_idle_t *)handle);
+            tev__idle_stop((tev_idle_t *)handle);
             break;
         case TEV_HANDLE_TYPE_TIMER:
-            tev_timer_stop((tev_timer_t *)handle);
+            tev__timer_stop((tev_timer_t *)handle);
             break;
         default:
             abort();

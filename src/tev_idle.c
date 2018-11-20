@@ -22,7 +22,7 @@ tev_idle_start(tev_idle_t *handle, tev_idle_cb cb)
 }
 
 int
-tev_idle_stop(tev_idle_t *handle)
+tev__idle_stop(tev_idle_t *handle)
 {
     QUEUE_REMOVE(handle->idle_queue);
 
