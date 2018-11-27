@@ -37,8 +37,6 @@ tev_async_send(tev_async_t *handle)
 
     QUEUE_INSERT_TAIL(handle->loop->active_queue, handle->active_queue);
 
-    tev__mutex_unlock(handle->loop->mutex_handle);
-
     tev__event_set(handle->loop->event_handle);
 
 exit:
